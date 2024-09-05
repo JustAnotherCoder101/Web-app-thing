@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dynamic Content</title>
+</head>
+<body>
+
+  <button id="changeButton">Change Content</button>
+
+  <div id="content">
+    This is the initial content.
+  </div>
+
+  <script>
+    const changeButton = document.getElementById("changeButton");
+    const contentDiv = document.getElementById("content");
+
+    changeButton.addEventListener("click", () => {
+      fetch('/get_new_content')
+        .then(response => response.json())
+        .then(data => {
+          contentDiv.innerHTML = data.content;
+        });
+    });
+  </script>
+
+</body>
+</html>
