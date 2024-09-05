@@ -5,22 +5,43 @@
 </head>
 <body>
 
-  <button id="changeButton">Change Content</button>
+  <form id="myForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
 
-  <div id="content">
-    This is the initial content.
-  </div>
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" required></textarea>
+
+    <button type="submit">Send Data</button>
+  </form>
+
+  <div id="response"></div>
 
   <script>
-    const changeButton = document.getElementById("changeButton");
-    const contentDiv = document.getElementById("content");
+    const myForm = document.getElementById("myForm");
+    const responseDiv = document.getElementById("response");
 
-    changeButton.addEventListener("click", () => {
-      fetch('/get_new_content')
-        .then(response => response.json())
-        .then(data => {
-          contentDiv.innerHTML = data.content;
-        });
+    myForm.addEventListener("submit", (event) => {
+      event.preventDefault(); // Prevent default form submission
+
+      const name = document.getElementById("name").value;
+      const message = document.getElementById("message").value;
+
+      fetch('/submit_data', {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: name, message: message }) // Send data as JSON
+      })
+      .then(response => response.json())
+      .then(data => {
+        responseDiv.innerHTML = `Response: ${data.message}`;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        responseDiv.innerHTML = 'Error sending data.';
+      });
     });
   </script>
 
